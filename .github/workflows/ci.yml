@@ -40,7 +40,9 @@ jobs:
             "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=sts.amazonaws.com" \
             | jq -r '.value')
 
-          echo "$TOKEN" | cut -d "." -f2 | base64 -d | jq
+          echo "=== OIDC Token Claims ==="
+          echo "$TOKEN" | cut -d "." -f2 | base64 -d | jq '.'
+          echo "=== End Token Claims ==="
 
 
       - name: Configure AWS credentials

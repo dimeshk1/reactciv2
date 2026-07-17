@@ -186,7 +186,7 @@ If old resources remain in default namespace:
 
 ## CI/CD Notes
 
-- CI builds image and pushes both SHA and latest tags to ECR.
+- CI builds image and pushes a unique SHA tag to ECR.
 - CD resolves the pushed SHA tag to its digest and rolls out EKS using image@sha256.
-- Runtime deployment is immutable (digest-based) while latest remains a convenience tag.
+- Runtime deployment is immutable (digest-based) with no dependency on mutable tags.
 

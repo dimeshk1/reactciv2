@@ -56,13 +56,9 @@ jobs:
       - name: Resolve image digest
         id: image
         run: |
-          DIGEST=$(aws ecr describe-images \
-            --repository-name $ECR_REPOSITORY \
-            --image-ids imageTag=$GITHUB_SHA \
-            --query 'imageDetails[0].imageDigest' \
-            --output text)
+          IMAGE_URI=$(docker inspect --format='{{index .RepoDigests 0}}' \
+            ${{ steps.login-ecr.outputs.registry }}/$ECR_REPOSITORY:$GITHUB_SHA)
 
-          IMAGE_URI=${{ steps.login-ecr.outputs.registry }}/$ECR_REPOSITORY@$DIGEST
           echo "image_uri=$IMAGE_URI" >> "$GITHUB_OUTPUT"
           echo "Deploying image: $IMAGE_URI"
 

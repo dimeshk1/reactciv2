@@ -186,7 +186,7 @@ If old resources remain in default namespace:
 
 ## CI/CD Notes
 
-- CI builds image and pushes to ECR.
-- Deployment currently references image tag latest in deployment.yaml.
-- For safer rollouts, consider pinning image tags to commit SHA and updating manifest per release.
+- CI builds image and pushes both SHA and latest tags to ECR.
+- CD resolves the pushed SHA tag to its digest and rolls out EKS using image@sha256.
+- Runtime deployment is immutable (digest-based) while latest remains a convenience tag.
 

@@ -1,0 +1,17 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: github-actions-deployer
+  namespace: github-actions
+  labels:
+    app: github-actions-deployer
+  annotations:
+    description: Binds ServiceAccount to deployment Role
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: github-actions-deployer
+subjects:
+  - kind: ServiceAccount
+    name: github-actions-deployer
+    namespace: github-actions

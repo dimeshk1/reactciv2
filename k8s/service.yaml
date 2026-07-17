@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: react-hello-world
+  namespace: github-actions
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
+  labels:
+    app: react-hello-world
+spec:
+  type: LoadBalancer
+  selector:
+    app: react-hello-world
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
+    protocol: TCP

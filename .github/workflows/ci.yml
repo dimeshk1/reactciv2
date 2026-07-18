@@ -84,6 +84,25 @@ jobs:
         run: |
           aws eks update-kubeconfig --name $EKS_CLUSTER_NAME --region $AWS_REGION
 
+      - name: Preflight identity and cluster access
+        run: |
+          set -euo pipefail
+          echo "AWS caller identity:"
+          aws sts get-caller-identity
+
+          echo "Kubernetes client/server versions:"
+          kubectl version --short || kubectl version
+
+          echo "Current kubectl context:"
+          kubectl config current-context
+
+          echo "Checking RBAC for namespace access..."
+          if ! kubectl auth can-i get pods -n $K8S_NAMESPACE; then
+            echo "ERROR: Current IAM role can reach EKS but is not authorized for Kubernetes API actions in namespace '$K8S_NAMESPACE'."
+            echo "Fix by granting this CI role cluster access (EKS access entry or aws-auth mapping)."
+            exit 1
+          fi
+
       - name: Apply Kubernetes manifests
         run: |
           kubectl apply -f k8s -R

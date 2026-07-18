@@ -90,8 +90,8 @@ jobs:
           echo "AWS caller identity:"
           aws sts get-caller-identity
 
-          echo "Kubernetes client/server versions:"
-          kubectl version --short || kubectl version
+          echo "Kubernetes client version:"
+          kubectl version --client
 
           echo "Current kubectl context:"
           kubectl config current-context

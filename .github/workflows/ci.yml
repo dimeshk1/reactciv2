@@ -105,7 +105,15 @@ jobs:
 
       - name: Apply Kubernetes manifests
         run: |
-          kubectl apply -f k8s -R
+          # Namespace is a cluster-scoped resource and is intentionally excluded here.
+          # The CI role is granted namespace-scoped access only (least privilege),
+          # so it cannot manage cluster-scoped objects like Namespace.
+          # namespace.yaml must be applied once by a cluster-admin identity instead.
+          for f in k8s/*.yaml; do
+            if [ "$(basename "$f")" != "namespace.yaml" ]; then
+              kubectl apply -f "$f"
+            fi
+          done
 
       - name: Rollout deployment with immutable digest image
         run: |

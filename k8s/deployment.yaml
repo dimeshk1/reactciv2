@@ -16,10 +16,22 @@ spec:
       labels:
         app: react-hello-world
     spec:
+      securityContext:
+        fsGroup: 101
       containers:
       - name: react-app
         image: 107282187171.dkr.ecr.us-east-1.amazonaws.com/react-hello-world:latest
         imagePullPolicy: Always
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 101
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+              - ALL
+            add:
+              - NET_BIND_SERVICE
         ports:
         - containerPort: 80
           name: http
@@ -43,3 +55,17 @@ spec:
             port: 80
           initialDelaySeconds: 5
           periodSeconds: 5
+        volumeMounts:
+        - name: tmp
+          mountPath: /tmp
+        - name: nginx-cache
+          mountPath: /var/cache/nginx
+        - name: nginx-run
+          mountPath: /var/run
+      volumes:
+      - name: tmp
+        emptyDir: {}
+      - name: nginx-cache
+        emptyDir: {}
+      - name: nginx-run
+        emptyDir: {}
